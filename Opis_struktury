@@ -1,0 +1,27 @@
+
+Folder: data
+raw/: Tutaj trzymasz nienaruszone pliki train.csv i test.csv. Służy to powtarzalności badań – jeśli coś zepsujesz w kodzie, zawsze masz oryginał do którego możesz wrócić.
+processed/: Tutaj zapiszemy dane po czyszczeniu, czyli po usunięciu błędów, danych odstających i wykonaniu imputacji MICE. Dzięki temu nie musisz uruchamiać ciężkich obliczeń za każdym razem, gdy chcesz tylko poprawić wykres.
+
+Folder: models
+Ważne: To nie jest miejsce na pliki .py. Tutaj przechowujemy gotowe, wytrenowane modele zapisane do plików (np. formaty .joblib, .pkl lub .pth).
+Dzięki temu, gdy wytrenujesz model, możesz go "zamrozić" i wczytać później do generowania przewidywań bez ponownego uczenia.
+
+Folder: notebooks
+Dlaczego warto je zostawić? Są idealne do etapu Eksploracyjnej Analizy Danych (EDA).
+W Jupyter Notebook (lub wbudowanych w PyCharm notatnikach .ipynb) możesz generować wykresy i statystyki "na żywo", co ułatwia analizę korelacji i trendów, zanim napiszesz sztywny kod w skryptach.
+
+Folder: outputs
+Tutaj trafiają wyniki działania Twojego programu, które nie są modelami. Może to być np. plik predictions.csv (wynik klasyfikacji zbioru testowego) lub logi z przebiegu uczenia.
+
+Folder: reports
+figures/: Tu lądują wykresy zapisane jako pliki .png lub .jpg (np. macierz korelacji, wykresy istotności cech).
+Będziesz ich używać do wklejenia do szablonu raportu, o którym wspomina instrukcja ("Projekt – struktura raportu.pdf").
+
+Folder: src (Kod źródłowy)
+To serce Twojego projektu, gdzie dzielisz logikę na moduły:
+data_processing.py: Tak, tutaj dodaj kod, który Ci podałem. Służy on do wczytywania danych, obsługi brakujących wartości (imputacja MICE) i czyszczenia błędów.
+
+features.py: Tutaj umieścisz kod do Feature Engineeringu. Przykładowo: funkcję, która zamienia kolumny Departure Delay i Arrival Delay w jedną kolumnę Total Delay.
+
+visualization.py: Tutaj tworzysz funkcje do generowania wykresów (np. histogramów czy macierzy pomyłek), aby nie zaśmiecać nimi głównego pliku main.py.
