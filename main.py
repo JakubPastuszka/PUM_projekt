@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import numpy as np
 
+
 # Importujemy funkcje z Twoich modułów src
 from src.data_processing import (
     analyze_dataset,
@@ -15,8 +16,9 @@ from src.features import process_features
 # Importujemy 3 funkcje modelowania
 from src.model_building import (
     run_logistic_regression,
+    run_logistic_regression_kfold,
     run_decision_tree,
-    run_random_forest,
+    run_random_forest, run_logistic_regression_incremental, run_incremental_training,
 )
 
 # --- KONFIGURACJA I STAŁE ---
@@ -124,7 +126,9 @@ def run_modeling_pipeline(train_data_path):
     print("#" * 60)
 
     # 1. Osoba od Regresji
-    run_logistic_regression(train_data_path)
+    # run_logistic_regression(train_data_path)
+    # run_logistic_regression_kfold(train_data_path)
+    run_logistic_regression_incremental(train_data_path)
 
     # 2. Osoba od Drzew
     run_decision_tree(train_data_path)
@@ -134,6 +138,32 @@ def run_modeling_pipeline(train_data_path):
 
     print("\n[SUKCES] Wszystkie modele wytrenowane i zapisane w folderze 'models/'!")
 
+
+def run_modeling_pipeline_incremental(train_data_path, restart=False):
+    print("\n" + "#" * 60)
+    print("#" * 60)
+
+    # Ścieżka do folderu dla modeli regresji incremental
+    models_dir = "models/log_reg_inc"
+
+    # 1. Osoba od Regresji – incremental learning
+    if restart:
+        # Usuń pliki modelu i 'train_used.csv', aby trenować od nowa
+        for f in ["base_model_sgd.joblib", "calibrated_model.joblib", "train_used.csv"]:
+            path = os.path.join(models_dir, f)
+            if os.path.exists(path):
+                os.remove(path)
+                print(f"[INFO] Usunięto {path} – trening regresji zacznie się od nowa")
+
+    # Wywołanie pipeline incremental
+    run_incremental_training(
+        train_data_path,
+        models_dir=models_dir,
+        restart=restart
+    )
+
+
+    print("\n[SUKCES] Wszystkie modele wytrenowane i zapisane w folderze 'models/'!")
 
 # --- GŁÓWNA FUNKCJA ---
 
@@ -159,7 +189,9 @@ def main():
     print("\n[SUKCES] Dane przetworzone i gotowe do modelowania!")
 
     # 6. Modelowanie
-    run_modeling_pipeline(FINAL_TRAIN_PATH)
+    # run_modeling_pipeline(FINAL_TRAIN_PATH)
+    run_modeling_pipeline_incremental(FINAL_TRAIN_PATH, restart=True)
+
 
 
 if __name__ == "__main__":
